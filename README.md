@@ -1,6 +1,6 @@
 # MiniappReto
 
-MiniApp for predicting trash.
+MiniApp for predicting trash, sneak peek of our Capstone Project; ReTo : Recycle Together
 
 ## Installation
 
