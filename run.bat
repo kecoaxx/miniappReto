@@ -3,6 +3,8 @@ cls
 
 echo Starting the application setup...
 
+pip install venv
+
 if not exist venv (
     echo Creating virtual environment...
     python -m venv venv
