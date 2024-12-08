@@ -4,6 +4,7 @@ from tkinter import Label, Button
 from PIL import Image, ImageTk
 import numpy as np
 import tensorflow as tf
+import cv2
 
 # Load your trained model
 finished_model_train = tf.keras.models.load_model('bestoneyet.h5')
@@ -30,6 +31,38 @@ def open_file():
     if not file_path:
         return
 
+    display_and_predict(file_path)
+
+# Function to capture an image from the webcam
+def capture_image():
+    # Open the webcam
+    cap = cv2.VideoCapture(0)
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Failed to capture image.")
+            break
+
+        # Show the webcam feed
+        cv2.imshow("Capture Image (Press SPACE to take photo, ESC to exit)", frame)
+
+        # Wait for key press
+        key = cv2.waitKey(1) & 0xFF
+        if key == 27:  # ESC key to exit
+            break
+        elif key == 32:  # SPACE key to capture
+            # Save the captured image
+            file_path = "captured_image.jpg"
+            cv2.imwrite(file_path, frame)
+            display_and_predict(file_path)
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+# Function to display the image and predict its class
+def display_and_predict(file_path):
     # Display the image
     img = Image.open(file_path)
     img.thumbnail((300, 300))  # Resize for display
@@ -53,6 +86,10 @@ img_label.pack()
 # Add a button to open a file dialog
 upload_button = Button(app, text="Upload Image", command=open_file)
 upload_button.pack()
+
+# Add a button to capture an image with the webcam
+capture_button = Button(app, text="Capture Image", command=capture_image)
+capture_button.pack()
 
 # Add a label to display the prediction result
 result_label = Label(app, text="Predicted Class: ", font=("Helvetica", 14))
